@@ -33,8 +33,8 @@ if (program.endingStub !== undefined) {
 var targetDir = program.args.pop();
 
 _.each(program.args, function (file) {
-  var rawInput = fs.createReadStream(path.join(__dirname, file));
-  mkdirp.sync(path.join(__dirname, targetDir, path.dirname(file)));
-  var destination = fs.createWriteStream(path.join(__dirname, targetDir, file));
+  var rawInput = fs.createReadStream(path.join(process.cwd(), file));
+  mkdirp.sync(path.join(process.cwd(), targetDir, path.dirname(file)));
+  var destination = fs.createWriteStream(path.join(process.cwd(), targetDir, file));
   byline(rawInput).pipe(parser).pipe(destination);
 });
