@@ -1,0 +1,22 @@
+{
+  "env": {
+    "node": true
+  },
+  "rules": {
+    "brace-style": [1, "1tbs"],
+    "camelcase": 0,
+    "no-alert": 2,
+    "no-bitwise": 2,
+    "no-empty": 2,
+    "no-ex-assign": 2,
+    "no-lonely-if": 2,
+    "no-loop-func": 2,
+    "no-reserved-keys": 2,
+    "no-underscore-dangle": 0,
+    "quotes": [2, "single", "avoid-escape"],
+    "space-after-keywords": 2,
+    "space-before-blocks": 2,
+    "space-infix-ops": 2,
+    "strict": 0
+  }
+}

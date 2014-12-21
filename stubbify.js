@@ -12,6 +12,6 @@ var stubbify = function (file, targetDir, stubStartRegex, stubEndRegex) {
   mkdirp.sync(path.join(process.cwd(), targetDir, path.dirname(file)));
   var destination = fs.createWriteStream(path.join(process.cwd(), targetDir, file));
   byline(rawInput).pipe(parser).pipe(destination);
-}
+};
 
 module.exports = stubbify;

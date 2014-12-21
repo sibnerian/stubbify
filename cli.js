@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/*eslint no-process-exit: 0*/
 
 var program = require('commander');
 var stubbify = require('./stubbify.js');
