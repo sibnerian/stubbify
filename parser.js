@@ -4,8 +4,11 @@ var parser = new Transform();
 
 parser.shouldPush = true;
 
-parser._beginStubRegex = new RegExp('^.*//[\\s]*STUB', 'i');
-parser._endStubRegex = new RegExp('^.*//[\\s]*ENDSTUB', 'i');
+parser.DEFAULT_START_REGEX = new RegExp('^.*//[\\s]*STUB', 'i');
+parser.DEFAULT_END_REGEX = new RegExp('^.*//[\\s]*ENDSTUB', 'i');
+
+parser._beginStubRegex = parser.DEFAULT_START_REGEX;
+parser._endStubRegex = parser.DEFAULT_END_REGEX;
 
 parser._transform = function (data, encoding, done) {
   data = data + '';
