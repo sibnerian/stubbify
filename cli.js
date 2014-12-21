@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-var _ = require('lodash');
 var program = require('commander');
 var stubbify = require('./stubbify.js');
 
@@ -8,7 +7,7 @@ program._name = 'stubbify';
 program._usage = '[file ...] [targetDir]';
 
 program
-  .version('0.0.3')
+  .version('0.0.4')
   .option('-b, --beginning-stub [regex]', 'JavaScript-style regex for beginning of stub (case-insensitive)')
   .option('-e, --ending-stub [regex]', 'JavaScript-style regex for end of stub (case-insensitive)')
   .parse(process.argv);
@@ -30,6 +29,6 @@ if (program.endingStub !== undefined) {
 
 var targetDir = program.args.pop();
 
-_.each(program.args, function (file) {
+program.args.forEach(function (file) {
   stubbify(file, targetDir, stubStartRegex, stubEndRegex);
 });
