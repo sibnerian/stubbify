@@ -1,5 +1,4 @@
 var fs = require('fs');
-var chai = require('chai');
 var should = require('should');
 var parser = require('../parser.js');
 var stubbify = require('../stubbify.js');
