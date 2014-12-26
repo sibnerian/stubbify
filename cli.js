@@ -3,6 +3,7 @@
 
 var program = require('commander');
 var stubbify = require('./stubbify.js');
+var glob = require("glob");
 
 program._name = 'stubbify';
 program._usage = '[file ...] [targetDir]';
@@ -30,6 +31,11 @@ if (program.endingStub !== undefined) {
 
 var targetDir = program.args.pop();
 
-program.args.forEach(function (file) {
-  stubbify(file, targetDir, stubStartRegex, stubEndRegex);
+program.args.forEach(function (pattern) {
+	glob(pattern, function(err, files){
+		for (var i = 0; i < files.length; i++){
+			var file = files[i];
+			stubbify(file, targetDir, stubStartRegex, stubEndRegex);
+		}
+	});
 });
