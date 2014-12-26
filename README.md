@@ -40,7 +40,7 @@ var add = function (a, b) {
 ```
 By default, `// STUB` and `// ENDSTUB` are used as the delimiters, but you can change that easily with the `--begining-stub` and `--ending-stub` options.
 
-Any number of files can be passed in, as long as the last argument is the target directory.
+Any number of files can be passed in, as long as the last argument is the target directory. Stubbify also supports *globs* (like `**/*.js`) through [node-glob](https://github.com/isaacs/node-glob).
 
 Stubbify preserves the relative path of the stubbed-out files - `foo/bar/baz/quux.js` will be copied into `targetDir/foo/bar/baz/quux.js`. This is so you can easily use stubbify as part of your build process for a student homework directory:
 ```
