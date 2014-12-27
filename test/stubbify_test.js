@@ -48,6 +48,5 @@ describe('#stubbify', function () {
     data = data + '';
     return data.split('\n');
   };
-
 });
 
