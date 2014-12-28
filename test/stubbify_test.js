@@ -17,17 +17,17 @@ describe('#stubbify', function () {
       beginningStub = parser.DEFAULT_START_REGEX,
       endingStub = parser.DEFAULT_END_REGEX;
 
-  before('read test, stubbified, and wanted files', function(done) {
+  before('read test, stubbified, and wanted files', function (done) {
     stubbify(testFile, destinationDir, beginningStub, endingStub);
-    setTimeout(function() {
+    setTimeout(function () {
       testFileLines = readTestFile(testFile);
       stubbifiedFileLines = readTestFile(stubbifiedFile);
       wantedFileLines = readTestFile(wantedFile);
       done();
-    }, 1000);
+    }, 100);
   });
 
-  after(function() {
+  after(function () {
     del.sync(destinationDir, function (err, paths) {
       if (err) throw err;
     });
@@ -48,5 +48,6 @@ describe('#stubbify', function () {
     data = data + '';
     return data.split('\n');
   };
+
 });
 
