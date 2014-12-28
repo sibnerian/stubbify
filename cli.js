@@ -9,7 +9,7 @@ program._name = 'stubbify';
 program._usage = '[file ...] [targetDir]';
 
 program
-  .version('0.0.4')
+  .version('0.0.6')
   .option('-b, --beginning-stub [regex]', 'JavaScript-style regex for beginning of stub (case-insensitive)')
   .option('-e, --ending-stub [regex]', 'JavaScript-style regex for end of stub (case-insensitive)')
   .parse(process.argv);
@@ -37,7 +37,11 @@ program.args.forEach(function (pattern) {
       throw err;
     }
     files.forEach(function (file) {
-      stubbify(file, targetDir, stubStartRegex, stubEndRegex);
+      stubbify(file, targetDir, stubStartRegex, stubEndRegex, function (err) {
+        if (err !== null) {
+          throw err;
+        }
+      });
     });
   });
 });
