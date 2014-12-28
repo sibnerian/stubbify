@@ -1,12 +1,17 @@
-var chai = require('chai'),
-    assert = chai.assert,
-    Transform = require('stream').Transform,
-    parser = require('../parser.js');
+/*eslint-env node, mocha */
+
+var chai = require('chai');
+var Transform = require('stream').Transform;
+var Parser = require('../parser.js');
+
+var assert = chai.assert;
 
 describe('#parser', function () {
   var readable, writable;
-  var writeableTransform;
+  var parser;
+
   beforeEach(function () {
+    parser = new Parser();
     readable = new Transform();
     writable = new Transform();
     writable.result = '';
@@ -17,44 +22,40 @@ describe('#parser', function () {
       }
       done();
     };
+    readable.pipe(parser).pipe(writable);
   });
 
   it('takes in a normal string', function (done) {
     var testString = 'hello world';
-    pipeString(testString);
-
-    setTimeout(function () {
+    readable.push(testString);
+    readable.end();
+    writable.on('finish', function () {
       assert.strictEqual(testString + '\n', writable.result);
       done();
-    }, 0);
+    });
   });
 
   it('does not take in beginStub', function (done) {
     var testString = '// STUB';
-    pipeString(testString);
-    
-    setTimeout(function () {
+    readable.push(testString);
+    readable.end();
+
+    writable.on('finish', function () {
       assert.notStrictEqual(testString + '\n', writable.result);
       assert.strictEqual('', writable.result);
       done();
-    }, 0);
+    });
   });
 
   it('does not take in text after beginStub', function (done) {
     var testString = '//STUB \n hello world \n //ENDSTUB';
-    pipeString(testString);
+    readable.push(testString);
+    readable.end();
 
-    setTimeout(function () {
+    writable.on('finish', function () {
       assert.notStrictEqual(testString + '\n', writable.result);
       assert.strictEqual('', writable.result);
       done();
-    }, 0);
+    });
   });
-
-  var pipeString = function (testString) {
-    readable.push(testString);
-    readable.pipe(parser).pipe(writable);
-  };
-
 });
-
