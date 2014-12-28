@@ -4,7 +4,7 @@
   "description": "Stubbify files so that some code isn't included.",
   "main": "stubbify.js",
   "scripts": {
-    "test": "eslint *.js --rulesdir .eslint_rules && mocha"
+    "test": "eslint *.js test/*.js --rulesdir .eslint_rules && mocha"
   },
   "keywords": [
     "stubbify",
