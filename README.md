@@ -1,7 +1,7 @@
 Stubbify - the File Stubbing Helper
 =================================
 
-## Installing
+## Installation
 ```
 npm install -g stubbify
 ```
@@ -11,40 +11,43 @@ npm install -g stubbify
 ```
 Usage: stubbify [file ...] [targetDir]
 
-  Options:
+Options:
 
-    -h, --help                    output usage information
-    -V, --version                 output the version number
-    -b, --beginning-stub [regex]  JavaScript-style regex for beginning of stub (case-insensitive)
-    -e, --ending-stub [regex]     JavaScript-style regex for end of stub (case-insensitive)
+  -h, --help                 output usage information
+  -V, --version              output the version number
+  -b, --begin-stub [string]  RegEx string (JS-style) for stub begin delimiter (case-insensitive)
+  -e, --end-stub [string]    RegEx string (JS-style) for stub end delimiter (case-insensitive)
+  -s, --silent               Suppress printing of stubbified file paths
 ```
 
 ## About
 
 Stubbify was created for [CIS 197](http://www.seas.upenn.edu/~cis197) to easily create homework boilerplate (for students to complete) from existing homework solutions. If we run `stubbify homework.js studentHW`, with the following `homework.js`:
 
-```
+```javascript
 var add = function (a, b) {
   // add the two input integers together
   // STUB
-  return a +b;
+  return a + b;
   // ENDSTUB
 }
 ```
 
 Then the stubs will be removed, leaving the following in `studentHW/homework.js`:
-```
+```javascript
 var add = function (a, b) {
   // add the two input integers together
 }
 ```
-By default, `// STUB` and `// ENDSTUB` are used as the delimiters, but you can change that easily with the `--begining-stub` and `--ending-stub` options.
 
-Any number of files can be passed in, as long as the last argument is the target directory. Stubbify also supports *globs* (like `**/*.js`) through [node-glob](https://github.com/isaacs/node-glob).
+The default delimiters are `// STUB` and `// ENDSTUB`, but these can be changed with the `--begin-stub` and `--end-stub` options to support other languages or preferences.
 
-Stubbify preserves the relative path of the stubbed-out files - `foo/bar/baz/quux.js` will be copied into `targetDir/foo/bar/baz/quux.js`. This is so you can easily use stubbify as part of your build process for a student homework directory:
+Any number of files can be provided, and file arguments can also be glob patterns (like `**/*.js`). Glob patterns must be passed as strings, and the last argument must always be the target directory.
+
+Stubbify preserves the relative paths of the stubbed-out files, so `foo/bar/baz/quux.js` will be copied into `targetDir/foo/bar/baz/quux.js`. This is so you can easily use stubbify as part of your build process for a student homework directory:
 ```
 $ stubbify js/homeworkFile1.js js/homeworkFile2.js js/util/homeworkUtil.js student-homework
+$ stubbify "js/**/*.js" student-homework # equivalent with glob pattern
 $ tree .
 .
 ├── js

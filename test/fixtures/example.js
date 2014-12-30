@@ -4,7 +4,6 @@ var add = function (a, b) {
   return a +b;
   // ENDSTUB
 }
-
 // STUB
 This should not show up in the END
 // ENDSTUB
