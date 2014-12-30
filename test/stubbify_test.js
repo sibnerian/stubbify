@@ -1,49 +1,52 @@
-/*eslint-env node, mocha*/
+/*eslint-env node, mocha */
 
 var chai = require('chai');
 var del = require('del');
 var fs = require('fs');
-var Parser = require('../parser.js');
-var stubbify = require('../stubbify.js');
+var stubbifier = require('../lib/stubbifier');
+var config = require('../lib/config');
 
 var assert = chai.assert;
 
 describe('#stubbify', function () {
   var fixturesPath = './test/fixtures/';
-  var testFile = fixturesPath + 'example.js';
-  var stubbifiedFile = fixturesPath + 'tmp/test/fixtures/example.js';
-  var wantedFile = fixturesPath + 'stubbified.js';
-  var destinationDir = fixturesPath + 'tmp';
-  var beginningStub = Parser.DEFAULT_START_REGEX;
-  var endingStub = Parser.DEFAULT_END_REGEX;
+  var targetDir = fixturesPath + 'tmp';
+  var htmlStubbify = stubbifier(targetDir, /^.*<!--[\s]*STUB[\s]*-->/, /^.*<!--[\s]*ENDSTUB[\s]*-->/);
 
-  var readTestFile = function (fileToRead) {
-    var data = fs.readFileSync(fileToRead);
-    data = data + '';
-    return data.split('\n');
+  var stubbifyAndCompare = function (input, expected, stubbify) {
+    stubbify = stubbify || stubbifier(targetDir, config.defaultBeginStub, config.defaultEndStub);
+    var inputPath = fixturesPath + input;
+    var outputPath = fixturesPath + 'tmp/test/fixtures/' + input;
+    var expectedPath = fixturesPath + expected;
+
+    return function (done) {
+      stubbify(inputPath, function (err) {
+        assert.isNull(err);
+        var expectedContents = fs.readFileSync(expectedPath) + '';
+        var outputContents = fs.readFileSync(outputPath) + '';
+        assert.strictEqual(expectedContents, outputContents);
+        done();
+      });
+    };
   };
 
-  var testFileLines, stubbifiedFileLines, wantedFileLines;
-
-  before('read test, stubbified, and wanted files', function (done) {
-    stubbify(testFile, destinationDir, beginningStub, endingStub, function (err) {
-      assert.isNull(err);
-      testFileLines = readTestFile(testFile);
-      stubbifiedFileLines = readTestFile(stubbifiedFile);
-      wantedFileLines = readTestFile(wantedFile);
-      done();
-    });
+  afterEach(function () {
+    del.sync(targetDir);
   });
 
-  after(function () {
-    del.sync(destinationDir);
-  });
+  it('stubbifies a basic file',
+    stubbifyAndCompare('example.js', 'example_out.js')
+  );
 
-  it('is different from original file', function () {
-    assert.notDeepEqual(testFileLines, stubbifiedFileLines);
-  });
+  it('does not modify a stubless file',
+    stubbifyAndCompare('stubless.js', 'stubless_out.js')
+  );
 
-  it('stubs correctly', function () {
-    assert.deepEqual(stubbifiedFileLines, wantedFileLines);
-  });
+  it('behaves like comments for nested stubs',
+    stubbifyAndCompare('nested.js', 'nested_out.js')
+  );
+
+  it('stubbifies with different delimiters',
+    stubbifyAndCompare('example.html', 'example_out.html', htmlStubbify)
+  );
 });

@@ -1,61 +1,55 @@
 /*eslint-env node, mocha */
 
+var hl = require('highland');
 var chai = require('chai');
-var Transform = require('stream').Transform;
-var Parser = require('../parser.js');
+var parser = require('../lib/stubbifier').parser;
+var config = require('../lib/config');
 
 var assert = chai.assert;
 
+var makeTest = function (input, expected) {
+  return function (done) {
+    hl([input])
+      .split()
+      .consume(parser(config.defaultBeginStub, config.defaultEndStub))
+      .intersperse('\n')
+      .toArray(function (lines) {
+        assert.strictEqual(expected, lines.join(''));
+        done();
+      });
+  };
+};
+
 describe('#parser', function () {
-  var readable, writable;
-  var parser;
+  it('takes in a normal string',
+    makeTest('hello world', 'hello world')
+  );
 
-  beforeEach(function () {
-    parser = new Parser();
-    readable = new Transform();
-    writable = new Transform();
-    writable.result = '';
-    writable._transform = function (data, encoding, done) {
-      if (data !== undefined) {
-        data = data + '';
-        this.result += data;
-      }
-      done();
-    };
-    readable.pipe(parser).pipe(writable);
-  });
+  it('drops beginStub',
+    makeTest('// STUB', '')
+  );
 
-  it('takes in a normal string', function (done) {
-    var testString = 'hello world';
-    readable.push(testString);
-    readable.end();
-    writable.on('finish', function () {
-      assert.strictEqual(testString + '\n', writable.result);
-      done();
-    });
-  });
+  it('drops text after beginStub',
+    makeTest('//STUB \n hello world \n //ENDSTUB', '')
+  );
 
-  it('does not take in beginStub', function (done) {
-    var testString = '// STUB';
-    readable.push(testString);
-    readable.end();
+  it('is case- and whitespace-insensitive',
+    makeTest('//stub ', '')
+  );
 
-    writable.on('finish', function () {
-      assert.notStrictEqual(testString + '\n', writable.result);
-      assert.strictEqual('', writable.result);
-      done();
-    });
-  });
+  it('drops text before beginStub in same line',
+    makeTest('hello world // STUB', '')
+  );
 
-  it('does not take in text after beginStub', function (done) {
-    var testString = '//STUB \n hello world \n //ENDSTUB';
-    readable.push(testString);
-    readable.end();
+  it('leaves text before beginStub',
+    makeTest('hello world\n// STUB', 'hello world')
+  );
 
-    writable.on('finish', function () {
-      assert.notStrictEqual(testString + '\n', writable.result);
-      assert.strictEqual('', writable.result);
-      done();
-    });
-  });
+  it('leaves text below endStub',
+    makeTest('// STUB\n// ENDSTUB\nhello world', 'hello world')
+  );
+
+  it('handles multiple beginStubs',
+    makeTest('// STUB\n// STUB\n// ENDSTUB\nhello world', 'hello world')
+  );
 });
