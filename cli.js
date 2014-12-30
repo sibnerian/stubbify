@@ -12,7 +12,7 @@ program._name = 'stubbify';
 program._usage = '[file ...] [targetDir]';
 
 program
-  .version('0.0.6')
+  .version('0.1.0')
   .option('-b, --begin-stub [string]', 'RegEx string (JS-style) for stub begin delimiter (case-insensitive)')
   .option('-e, --end-stub [string]', 'RegEx string (JS-style) for stub end delimiter (case-insensitive)')
   .option('-s, --silent', 'Suppress printing of stubbified file paths')

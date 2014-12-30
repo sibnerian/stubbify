@@ -1,6 +1,6 @@
 {
   "name": "stubbify",
-  "version": "0.0.6",
+  "version": "0.1.0",
   "description": "Stubbify files so that some code isn't included.",
   "main": "lib/stubbifier.js",
   "scripts": {
