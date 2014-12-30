@@ -5,14 +5,13 @@ var hl = require('highland');
 var glob = require('glob');
 var path = require('path');
 var program = require('commander');
-var config = require('./lib/config');
 var stubbifier = require('./lib/stubbifier');
 
 program._name = 'stubbify';
 program._usage = '[file ...] [targetDir]';
 
 program
-  .version('0.1.0')
+  .version('0.1.1')
   .option('-b, --begin-stub [string]', 'RegEx string (JS-style) for stub begin delimiter (case-insensitive)')
   .option('-e, --end-stub [string]', 'RegEx string (JS-style) for stub end delimiter (case-insensitive)')
   .option('-s, --silent', 'Suppress printing of stubbified file paths')
@@ -23,19 +22,8 @@ if (program.args.length < 2) {
   process.exit();
 }
 
-var beginStub = config.defaultBeginStub;
-var endStub = config.defaultEndStub;
-
-if (program.beginStub !== undefined) {
-  beginStub = new RegExp(program.beginStub, 'i');
-}
-
-if (program.endStub !== undefined) {
-  endStub = new RegExp(program.endStub, 'i');
-}
-
 var targetDir = program.args.pop();
-var stubbify = stubbifier(targetDir, beginStub, endStub);
+var stubbify = stubbifier(targetDir, program.beginStub, program.endStub);
 
 hl(program.args)
   .flatMap(hl.wrapCallback(glob)).series()

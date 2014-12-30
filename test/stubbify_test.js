@@ -4,17 +4,16 @@ var chai = require('chai');
 var del = require('del');
 var fs = require('fs');
 var stubbifier = require('../lib/stubbifier');
-var config = require('../lib/config');
 
 var assert = chai.assert;
 
 describe('#stubbify', function () {
   var fixturesPath = './test/fixtures/';
   var targetDir = fixturesPath + 'tmp';
-  var htmlStubbify = stubbifier(targetDir, /^.*<!--[\s]*STUB[\s]*-->/, /^.*<!--[\s]*ENDSTUB[\s]*-->/);
+  var htmlStubbify = stubbifier(targetDir, '^.*<!--[\\s]*STUB[\\s]*-->', '^.*<!--[\\s]*ENDSTUB[\\s]*-->');
 
   var stubbifyAndCompare = function (input, expected, stubbify) {
-    stubbify = stubbify || stubbifier(targetDir, config.defaultBeginStub, config.defaultEndStub);
+    stubbify = stubbify || stubbifier(targetDir);
     var inputPath = fixturesPath + input;
     var outputPath = fixturesPath + 'tmp/test/fixtures/' + input;
     var expectedPath = fixturesPath + expected;

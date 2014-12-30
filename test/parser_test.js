@@ -3,7 +3,6 @@
 var hl = require('highland');
 var chai = require('chai');
 var parser = require('../lib/stubbifier').parser;
-var config = require('../lib/config');
 
 var assert = chai.assert;
 
@@ -11,7 +10,7 @@ var makeTest = function (input, expected) {
   return function (done) {
     hl([input])
       .split()
-      .consume(parser(config.defaultBeginStub, config.defaultEndStub))
+      .consume(parser())
       .intersperse('\n')
       .toArray(function (lines) {
         assert.strictEqual(expected, lines.join(''));
