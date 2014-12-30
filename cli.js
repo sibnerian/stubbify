@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /*eslint no-process-exit: 0*/
 
-var _ = require('highland');
+var hl = require('highland');
 var glob = require('glob');
 var path = require('path');
 var program = require('commander');
@@ -37,9 +37,9 @@ if (program.endStub !== undefined) {
 var targetDir = program.args.pop();
 var stubbify = stubbifier(targetDir, beginStub, endStub);
 
-_(program.args)
-  .flatMap(_.wrapCallback(glob)).series()
-  .flatMap(_.wrapCallback(stubbify))
+hl(program.args)
+  .flatMap(hl.wrapCallback(glob)).series()
+  .flatMap(hl.wrapCallback(stubbify))
   .toArray(function (files) {
     if (!program.silent) {
       console.log('Stubbified the following files:');

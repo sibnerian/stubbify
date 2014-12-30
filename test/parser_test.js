@@ -1,6 +1,6 @@
 /*eslint-env node, mocha */
 
-var _ = require('highland');
+var hl = require('highland');
 var chai = require('chai');
 var parser = require('../lib/stubbifier').parser;
 var config = require('../lib/config');
@@ -9,7 +9,7 @@ var assert = chai.assert;
 
 var makeTest = function (input, expected) {
   return function (done) {
-    _([input])
+    hl([input])
       .split()
       .consume(parser(config.defaultBeginStub, config.defaultEndStub))
       .intersperse('\n')
