@@ -25,11 +25,31 @@ describe('#parser', function () {
     makeTest('hello world', 'hello world')
   );
 
-  it('does not take in beginStub',
+  it('drops beginStub',
     makeTest('// STUB', '')
   );
 
-  it('does not take in text after beginStub',
+  it('drops text after beginStub',
     makeTest('//STUB \n hello world \n //ENDSTUB', '')
+  );
+
+  it('is case- and whitespace-insensitive',
+    makeTest('//stub ', '')
+  );
+
+  it('drops text before beginStub in same line',
+    makeTest('hello world // STUB', '')
+  );
+
+  it('leaves text before beginStub',
+    makeTest('hello world\n// STUB', 'hello world')
+  );
+
+  it('leaves text below endStub',
+    makeTest('// STUB\n// ENDSTUB\nhello world', 'hello world')
+  );
+
+  it('handles multiple beginStubs',
+    makeTest('// STUB\n// STUB\n// ENDSTUB\nhello world', 'hello world')
   );
 });

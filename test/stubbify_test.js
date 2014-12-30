@@ -11,13 +11,13 @@ var assert = chai.assert;
 describe('#stubbify', function () {
   var fixturesPath = './test/fixtures/';
   var targetDir = fixturesPath + 'tmp';
+  var htmlStubbify = stubbifier(targetDir, /^.*<!--[\s]*STUB[\s]*-->/, /^.*<!--[\s]*ENDSTUB[\s]*-->/);
 
-  var stubbifyAndCompare = function (input, expected) {
+  var stubbifyAndCompare = function (input, expected, stubbify) {
+    stubbify = stubbify || stubbifier(targetDir, config.defaultBeginStub, config.defaultEndStub);
     var inputPath = fixturesPath + input;
     var outputPath = fixturesPath + 'tmp/test/fixtures/' + input;
     var expectedPath = fixturesPath + expected;
-
-    var stubbify = stubbifier(targetDir, config.defaultBeginStub, config.defaultEndStub);
 
     return function (done) {
       stubbify(inputPath, function (err) {
@@ -30,7 +30,7 @@ describe('#stubbify', function () {
     };
   };
 
-  after(function () {
+  afterEach(function () {
     del.sync(targetDir);
   });
 
@@ -44,5 +44,9 @@ describe('#stubbify', function () {
 
   it('behaves like comments for nested stubs',
     stubbifyAndCompare('nested.js', 'nested_out.js')
+  );
+
+  it('stubbifies with different delimiters',
+    stubbifyAndCompare('example.html', 'example_out.html', htmlStubbify)
   );
 });
