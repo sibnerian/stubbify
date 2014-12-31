@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /*eslint no-process-exit: 0*/
 
-var hl = require('highland');
 var glob = require('glob');
+var hl = require('highland');
 var path = require('path');
 var program = require('commander');
 var stubbifier = require('./lib/stubbifier');
