@@ -1,5 +1,7 @@
-Stubbify - the File Stubbing Helper
-=================================
+# Stubbify - the File Stubbing Helper
+
+  [![NPM Version][npm-image]][npm-url]
+  [![Build Status][travis-image]][travis-url]
 
 ## Installation
 ```
@@ -19,6 +21,8 @@ Options:
   -e, --end-stub [string]    RegEx string (JS-style) for stub end delimiter (case-insensitive)
   -s, --silent               Suppress printing of stubbified file paths
 ```
+
+See also the [Grunt](http://gruntjs.com/) plugin, [grunt-stubbify](https://github.com/isibner/grunt-stubbify).
 
 ## About
 
@@ -62,3 +66,8 @@ $ tree .
         └── util
             └── homeworkUtil.js
 ```
+
+[npm-image]: https://img.shields.io/npm/v/stubbify.svg?style=flat
+[npm-url]: https://www.npmjs.com/package/stubbify
+[travis-image]: https://img.shields.io/travis/isibner/stubbify.svg?style=flat
+[travis-url]: https://travis-ci.org/isibner/stubbify
