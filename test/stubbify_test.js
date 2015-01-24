@@ -12,8 +12,17 @@ describe('#stubbify', function () {
   var targetDir = fixturesPath + 'tmp';
   var htmlStubbify = stubbifier(targetDir, '^.*<!--[\\s]*STUB[\\s]*-->', '^.*<!--[\\s]*ENDSTUB[\\s]*-->');
 
-  var stubbifyAndCompare = function (input, expected, stubbify) {
+  var textComparator = function (bufferExpected, bufferActual) {
+    assert.strictEqual(bufferExpected.toString(), bufferActual.toString());
+  };
+
+  var binaryComparator = function (bufferExpected, bufferActual) {
+    assert.strictEqual(bufferExpected.toString('hex'), bufferActual.toString('hex'));
+  };
+
+  var stubbifyAndCompare = function (input, expected, stubbify, comparator) {
     stubbify = stubbify || stubbifier(targetDir);
+    comparator = comparator || textComparator;
     var inputPath = fixturesPath + input;
     var outputPath = fixturesPath + 'tmp/test/fixtures/' + input;
     var expectedPath = fixturesPath + expected;
@@ -21,9 +30,9 @@ describe('#stubbify', function () {
     return function (done) {
       stubbify(inputPath, function (err) {
         assert.isNull(err);
-        var expectedContents = fs.readFileSync(expectedPath) + '';
-        var outputContents = fs.readFileSync(outputPath) + '';
-        assert.strictEqual(expectedContents, outputContents);
+        var bufferExpected = fs.readFileSync(expectedPath);
+        var bufferActual = fs.readFileSync(outputPath);
+        comparator(bufferExpected, bufferActual);
         done();
       });
     };
@@ -47,5 +56,9 @@ describe('#stubbify', function () {
 
   it('stubbifies with different delimiters',
     stubbifyAndCompare('example.html', 'example_out.html', htmlStubbify)
+  );
+
+  it('stubbifies binary files without changing them',
+    stubbifyAndCompare('penguin.jpg', 'penguin.jpg', undefined, binaryComparator)
   );
 });

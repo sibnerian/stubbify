@@ -1,6 +1,6 @@
 {
   "name": "stubbify",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Stubbify files so that some code isn't included.",
   "main": "lib/stubbifier.js",
   "scripts": {
@@ -20,6 +20,7 @@
     "commander": "2.5.1",
     "glob": "4.3.2",
     "highland": "git://github.com/caolan/highland.git#5e0b846",
+    "istextorbinary": "1.0.2",
     "mkdirp": "0.5.0"
   },
   "devDependencies": {
